@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Hangout Responses</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container, .admin-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .admin-container {
+            max-width: 800px;
+            display: none;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #764ba2;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        button {
+            background: #764ba2;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #5a3790;
+        }
+        
+        .response-item {
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f9f9f9;
+        }
+        
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .answer-yes {
+            color: #28a745;
+        }
+        
+        .answer-no {
+            color: #dc3545;
+        }
+        
+        .response-message {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #ddd;
+        }
+        
+        .logout-btn {
+            background: #dc3545;
+            margin-top: 20px;
+        }
+        
+        .logout-btn:hover {
+            background: #c82333;
+        }
+        
+        .no-responses {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .response-details {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container" id="loginContainer">
+        <h1>Admin Login</h1>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    
+    <div class="admin-container" id="adminContainer">
+        <h1>Hangout Responses</h1>
+        <div id="responsesList"></div>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            fetch('/admin/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('loginContainer').style.display = 'none';
+                    document.getElementById('adminContainer').style.display = 'block';
+                    loadResponses();
+                } else {
+                    alert('Invalid credentials!');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Login failed. Please try again.');
+            });
+        });
+        
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            document.getElementById('adminContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'block';
+            document.getElementById('loginForm').reset();
+        });
+        
+        function loadResponses() {
+            fetch('/admin/responses')
+            .then(response => response.json())
+            .then(responses => {
+                const responsesList = document.getElementById('responsesList');
+                
+                if (responses.length === 0) {
+                    responsesList.innerHTML = '<div class="no-responses">No responses yet.</div>';
+                    return;
+                }
+                
+                responsesList.innerHTML = '';
+                
+                responses.forEach(response => {
+                    const responseItem = document.createElement('div');
+                    responseItem.className = 'response-item';
+                    
+                    const answerClass = response.answer === 'Yes' ? 'answer-yes' : 'answer-no';
+                    
+                    // Format location information
+                    let locationInfo = '';
+                    if (response.location && response.answer === 'Yes') {
+                        const locationMap = {
+                            'coffee': 'Coffee & Chat',
+                            'park': 'Park Walk',
+                            'dinner': 'Grab a Bite',
+                            'movie': 'Movie Night',
+                            'custom': response.customLocation || 'Custom Location'
+                        };
+                        locationInfo = `<div class="response-details"><strong>Location:</strong> ${locationMap[response.location] || response.location}</div>`;
+                    }
+                    
+                    responseItem.innerHTML = `
+                        <div class="response-header">
+                            <span>${response.name}</span>
+                            <span class="${answerClass}">${response.answer}</span>
+                            <span>${new Date(response.date).toLocaleString()}</span>
+                        </div>
+                        <div><strong>Contact:</strong> ${response.contact}</div>
+                        ${locationInfo}
+                        ${response.message ? `<div class="response-message"><strong>Message:</strong> ${response.message}</div>` : ''}
+                    `;
+                    
+                    responsesList.appendChild(responseItem);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('responsesList').innerHTML = '<div class="no-responses">Error loading responses.</div>';
+            });
+        }
+        
+        // Auto-refresh responses every 30 seconds
+        setInterval(() => {
+            if (document.getElementById('adminContainer').style.display === 'block') {
+                loadResponses();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>

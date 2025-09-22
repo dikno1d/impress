@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Let's Hang Out! 👋</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="proposal-card">
+            <h1 class="title">Let's Hang Out! 👋</h1>
+            <p class="subtitle">Hey! I thought it would be fun to chill together this week</p>
+            
+            <div class="message">
+                <p>I've been wanting to catch up and thought it would be nice to do something fun together. No pressure at all - just a friendly hangout!</p>
+            </div>
+            
+            <div class="date-options">
+                <h2><i class="fas fa-calendar-alt"></i> When works for you?</h2>
+                <div class="buttons">
+                    <button class="btn yes-btn" id="thursdayBtn">
+                        <i class="fas fa-calendar-day"></i> Thursday, Sept 25
+                    </button>
+                    <button class="btn yes-btn" id="fridayBtn">
+                        <i class="fas fa-calendar-day"></i> Friday, Sept 26
+                    </button>
+                    <button class="btn no-btn" id="noBtn">
+                        <i class="fas fa-calendar-times"></i> Sorry, I'm busy
+                    </button>
+                </div>
+            </div>
+            
+            <div class="location-selection hidden" id="locationSelection">
+                <h3><i class="fas fa-map-marker-alt"></i> What sounds fun?</h3>
+                
+                <div class="location-options">
+                    <div class="location-btn" data-location="coffee">
+                        <div class="location-icon">
+                            <i class="fas fa-coffee"></i>
+                        </div>
+                        <div class="location-info">
+                            <h4>Coffee & Chat</h4>
+                            <p>Relaxed conversation</p>
+                        </div>
+                    </div>
+                    
+                    <div class="location-btn" data-location="park">
+                        <div class="location-icon">
+                            <i class="fas fa-tree"></i>
+                        </div>
+                        <div class="location-info">
+                            <h4>Park Walk</h4>
+                            <p>Enjoy nature together</p>
+                        </div>
+                    </div>
+                    
+                    <div class="location-btn" data-location="dinner">
+                        <div class="location-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <div class="location-info">
+                            <h4>Grab a Bite</h4>
+                            <p>Casual dining</p>
+                        </div>
+                    </div>
+                    
+                    <div class="location-btn" data-location="movie">
+                        <div class="location-icon">
+                            <i class="fas fa-film"></i>
+                        </div>
+                        <div class="location-info">
+                            <h4>Movie Night</h4>
+                            <p>Catch the latest film</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="customLocation">Or suggest your own place:</label>
+                    <input type="text" id="customLocation" placeholder="Your favorite spot...">
+                </div>
+            </div>
+            
+            <div class="response-form hidden" id="responseForm">
+                <h3><i class="fas fa-heart"></i> Perfect! Just a few details</h3>
+                <form id="proposalForm">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" placeholder="Enter your name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contact">Your Contact Info</label>
+                        <input type="text" id="contact" placeholder="Phone number or email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Anything else you'd like to add?</label>
+                        <textarea id="message" placeholder="Share your thoughts..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn submit-btn">
+                        <i class="fas fa-paper-plane"></i> Send My Response
+                    </button>
+                </form>
+            </div>
+            
+            <div class="result-message hidden" id="resultMessage">
+                <p><i class="fas fa-heartbeat"></i> Awesome! Can't wait! 💕</p>
+            </div>
+        </div>
+        
+        <div class="floating-hearts">
+            <!-- Hearts will be generated by JavaScript -->
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
